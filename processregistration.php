@@ -27,8 +27,8 @@ if ($passConf == $pass0) {
         $userInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
 
         //TODO send email
-        //TODO change the domain
-        $mysite =  'http://www.kentshelloworldnotexisted.com';
+
+        $mysite =  ROOTDOMAIN;
         $conlink = $mysite."/index.php?r=$token&e=$reEmail";
         sendemail($reEmail,$mysite,$conlink);
 
@@ -45,7 +45,7 @@ if ($passConf == $pass0) {
 }
 
 function registerSuccess($reEmail,$token) {
-    echo "Thank you. <a href='http://note-to-myself.com/index.php?r=$token&e=$reEmail'>Finish signing up</a>.
+    echo "Thank you. <a href='index.php?r=$token&e=$reEmail'>Finish signing up</a>.
 
 
 <br>Thank you for registering. 
@@ -57,7 +57,7 @@ function registerSuccess($reEmail,$token) {
 <br>Please confirm your registration by clicking the link in your email. 
 
 
-<br>Then you can <a href='index.php'>log in</a>. <span style='color:red;text-decoration:blink'>Alternatively, you can finish signing up <a href='http://note-to-myself.com/index.php?r=$token&e=$reEmail'></span>now</a>.";
+<br>Then you can <a href='index.php'>log in</a>. <span style='color:red;text-decoration:blink'>Alternatively, you can finish signing up <a href='index.php?r=$token&e=$reEmail'></span>now</a>.";
 }
 
 function sendemail($toemail,$mysiteurl,$confrimlink) {

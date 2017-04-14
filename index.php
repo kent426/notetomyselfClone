@@ -3,6 +3,7 @@ require_once "commonHead.php";
 
 session_start();
 
+//account confirmation
 if(isset($_GET['r'])&&isset($_GET['e'])) {
     $confirmcode = $_GET['r'];
     $emailtoconfirm = $_GET['e'];
@@ -10,7 +11,7 @@ if(isset($_GET['r'])&&isset($_GET['e'])) {
     $db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) or
     die(mysqli_connect_error());
     mysqli_select_db($db, DB_DATABASE);
-    $q = "SELECT cofirmcode FROM users WHERE email = '$emailtoconfirm'";
+    $q = "SELECT confirmcode FROM users WHERE email = '$emailtoconfirm'";
     $result = mysqli_query($db, $q) or die(mysqli_error($db));
     //confirm code matchs
     if (mysqli_num_rows($result) == 1&&strcmp(mysqli_fetch_row($result)[0], $confirmcode)==0) {

@@ -15,7 +15,7 @@ ob_start();
 session_start();
 
 if(!isset($_SESSION['login'])){
-die('<a href="login.php">log in</a> or <a href="register2.php">register</a>  before logging out.');
+die('<a href="index.php">log in</a> or <a href="register2.php">register</a>  before logging out.');
 }
 echo "<h2>".$_SESSION['username']."is now logged out. Thank you.</h2><p><a href='index.php'>Log in</a> again.</p>";
 
