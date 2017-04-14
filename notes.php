@@ -15,10 +15,20 @@
 
 </head>
 <body>
+<?php
+
+require_once "commonHead.php";
+
+session_start();
+
+$db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) or
+die(mysqli_connect_error());
+
+mysqli_select_db($db, DB_DATABASE);?>
 
 <div id="wrapper">
     <form action="notes.php" enctype="multipart/form-data" method="post">
-        <h2 id="header">zhaoliangbz@gmail.com - <span><a href="logout.php">Log out</a></span></h2>
+        <?php echo '<h2 id="header">'.$_SESSION['username'].' - <span><a href="logout.php">Log out</a></span></h2>'?>
 
 
         <div id="section1">
