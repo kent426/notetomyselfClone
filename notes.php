@@ -35,7 +35,7 @@ if(isset($_POST['submitting'])){
     insertNotes();
 }
 
-//function for insert notes and TBD
+//function for inserting notes and TBD to DB
 function insertNotes(){
     $db=connectDB();
     $email=$_SESSION['username'];
@@ -43,6 +43,18 @@ function insertNotes(){
     $tb=$_POST['tbd'];
     $qi = "UPDATE notes SET notes = '$notes',tbd = '$tb'  WHERE email='$email'";
     $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+
+    //insert websites
+    $websites = $_POST['websites'];
+    $urlsStr = "";
+    foreach ($websites as $oneurl) {
+        $urlsStr .= $oneurl."<#<#<#<>#>#>#>";
+    }
+    $urlsStr = mysqli_real_escape_string($db,$urlsStr);
+    $queryInURLS = "UPDATE notes SET websitesUrls = '$urlsStr'  WHERE email='$email'";
+    $urlsInsert = mysqli_query($db, $queryInURLS) or die(mysqli_error($db));
+    //-------------------
+
     mysqli_close($db);
 }
 ?>
@@ -55,6 +67,24 @@ $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
 
 $reArr = mysqli_fetch_assoc($reRetrieve);
 mysqli_close($db);
+
+function printurls($reArr) {
+   $urlsString = $reArr['websitesUrls'];
+   if($urlsString !== NULL) {
+       $urlsArray = explode("<#<#<#<>#>#>#>",$urlsString);
+       //echo "GETcsv<br>";
+       //print_r($urlsArray);
+       foreach ($urlsArray as $oneurl) {
+           if(!empty($oneurl)) {
+               echo "<input type='text' name='websites[]' value='$oneurl' onclick='openInNew(this);' /><br >";
+           }
+
+       }
+   }
+}
+
+
+
 ?>
 
 
@@ -85,7 +115,7 @@ mysqli_close($db);
             <div id="column2">
                 <h2>websites</h2><h3>click to open</h3>
 
-
+                <?php  printurls($reArr) ?>
 
                 <input type="text" name="websites[]" /><br >
                 <input type="text" name="websites[]" /><br >
