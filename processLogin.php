@@ -11,6 +11,7 @@ require_once "commonHead.php";
 
 session_start();
 
+
 $db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) or
 die(mysqli_connect_error());
 
@@ -31,6 +32,16 @@ $row = mysqli_fetch_all($result, MYSQLI_ASSOC);
 if($numOfuser==1&&strcmp($row[0]['password'], $pass)==0&&$row[0]['isactive'] == 1) {
     $_SESSION['login'] = 1;
     $_SESSION['username'] = $email;
+
+    $_SESSION['CREATED'] = time();
+    $_SESSION['BROWSER']=$_SERVER['HTTP_USER_AGENT'];
+    $_SESSION['IP']=$_SERVER['REMOTE_ADDR'];
+    $_SESSION['LANGUAGE']=$_SERVER['HTTP_ACCEPT_LANGUAGE'];
+
+    //set cookies for check
+    $value = session_id();
+    setcookie("id", $value, time()+1200);
+
     header("Location:notes.php");
     die();
     //not activated
