@@ -32,7 +32,10 @@ mysqli_close($db);
 <?php
 if(isset($_POST['submitting'])){
     insertNotes();
-    insertImage();
+    if(file_exists($_FILES['i']['tmp_name']) &&is_uploaded_file($_FILES['i']['tmp_name'])) {
+        insertImage();
+}
+
 }
 
 //function for inserting notes and TBD to DB
@@ -57,15 +60,50 @@ function insertNotes(){
 
     mysqli_close($db);
 }
-//INSERT IMAGE
-function insertImage(){
+
+//if return 5, no space
+function checkImageNum() {
     $db=connectDB();
     $email=$_SESSION['username'];
-
-    $file=addslashes(file_get_contents($_FILES["i"]["tmp_name"]));
-    $qi = "UPDATE notes SET image1 = '$file'  WHERE email='$email'";
-    $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    $retrieve = "SELECT * FROM notes WHERE email = '$email'";
+    $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
+    $reArr = mysqli_fetch_assoc($reRetrieve);
+    //the current available index for storing image
+    global $indexImag;
+    for($indexImag = 1;$indexImag <= 4;$indexImag++) {
+        $name = "image" . $indexImag;
+        if($reArr["$name"]=== NULL) {
+            break;
+        }
+    }
     mysqli_close($db);
+    return $indexImag;
+
+}
+//INSERT IMAGE
+function insertImage(){
+
+    $email=$_SESSION['username'];
+
+    $allowed =  array('gif' ,'jpg');
+    $filename = $_FILES['i']['name'];
+    $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    if(!in_array($ext,$allowed) ) {
+        die("only can upload gif and jpg.<a href=\"notes.php\">Try again</a>");
+    }
+    //has 1 to 4 to upload
+    $indexImag = checkImageNum();
+    if($indexImag <5) {
+        $db=connectDB();
+        $name = "image" . $indexImag;
+        $file=addslashes(file_get_contents($_FILES["i"]["tmp_name"]));
+        $qi = "UPDATE notes SET $name = '$file'  WHERE email='$email'";
+        $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+        mysqli_close($db);
+    }
+
+
+
 }
 
 ?>
@@ -141,22 +179,39 @@ function printurls($reArr) {
                 <h2>images</h2><h3>click for full size</h3>
                 <!-- <textarea cols="16" rows="40" id="image" name="image" /></textarea> -->
 
-                <input type="file" name="i" /><br /><br />
+                <?php
+                if(checkImageNum()==5) {
+                    echo "<p>maximum 4 images. delete some to upload new images.</p> ";
+                } else {
+                   echo "<input type=\"file\" name=\"i\" /><br /><br />";
+                }
+                ?>
+
+
 
 
                 <div>
                     <?php  $db=connectDB();
-                    $query = "SELECT image1 FROM notes";
+                    $email = $_SESSION['username'];
+                    $query = "SELECT image1,image2,image3,image4 FROM notes WHERE email = '$email'";
                     $result = mysqli_query($db, $query);
-                    while($row = mysqli_fetch_array($result))
+                    while($row = mysqli_fetch_row($result))
                     {
-                        echo '  
+                        foreach ($row as $oneIm) {
+                            if($oneIm===NULL) {
+                                break;
+                            }
+                            echo '  
                           <tr>  
                                <td>  
-                                    <img src="data:image/jpeg;base64,'.base64_encode($row['image1'] ).'" height="200" width="200" class="img-thumnail" />  
+                                    <img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" />  
                                </td>  
                           </tr>  
+                          <br>
                      ';
+                        }
+
+
                     }
                     ?>
 
