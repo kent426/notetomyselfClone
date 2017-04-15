@@ -8,7 +8,6 @@ if($_SESSION['login'] != 1) {
 }
 
 $email = $_SESSION['username'];
-
 $db = connectDB();
 $retrieve = "SELECT * FROM notes WHERE email = '$email'";
 $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
@@ -56,6 +55,21 @@ function insertNotes(){
     //-------------------
 
     mysqli_close($db);
+}
+
+function insertImage(){
+    $db=connectDB();
+    $email=$_SESSION['username'];
+
+    $image=addslashes($_FILES["image"]["tmp_name"]);
+    $name=addslashes($_FILES["image"]["name"]);
+    $image_size=getimagesize($_FILES["image"]["tmp_name"]);
+    $image=base64_decode($image);
+    echo "hehehe".$image;
+    $qi = "UPDATE notes SET image1 = '$image'  WHERE email='$email'";
+    $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    mysqli_close($db);
+
 }
 ?>
 
