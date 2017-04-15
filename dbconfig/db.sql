@@ -17,12 +17,14 @@ CREATE TABLE notes (
 	notes_id INTEGER NOT NULL auto_increment,
 	email varchar(100) NOT NULL ,
 	websitesUrls VARCHAR(10000),
-	image1 MEDIUMBLOB,
-	image2 MEDIUMBLOB,
-	image3 MEDIUMBLOB,
-	image4 MEDIUMBLOB,
+	image1 LONGBLOB,
+	image2 LONGBLOB,
+	image3 LONGBLOB,
+	image4 LONGBLOB,
 	notes 	TEXT,
 	tbd 	TEXT,
 	PRIMARY KEY (notes_id)
 );
+
+
 

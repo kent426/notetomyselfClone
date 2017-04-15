@@ -32,6 +32,7 @@ mysqli_close($db);
 <?php
 if(isset($_POST['submitting'])){
     insertNotes();
+    insertImage();
 }
 
 //function for inserting notes and TBD to DB
@@ -56,21 +57,17 @@ function insertNotes(){
 
     mysqli_close($db);
 }
-
+//INSERT IMAGE
 function insertImage(){
     $db=connectDB();
     $email=$_SESSION['username'];
 
-    $image=addslashes($_FILES["image"]["tmp_name"]);
-    $name=addslashes($_FILES["image"]["name"]);
-    $image_size=getimagesize($_FILES["image"]["tmp_name"]);
-    $image=base64_decode($image);
-    echo "hehehe".$image;
-    $qi = "UPDATE notes SET image1 = '$image'  WHERE email='$email'";
+    $file=addslashes(file_get_contents($_FILES["i"]["tmp_name"]));
+    $qi = "UPDATE notes SET image1 = '$file'  WHERE email='$email'";
     $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
     mysqli_close($db);
-
 }
+
 ?>
 
 <?php
@@ -83,21 +80,19 @@ $reArr = mysqli_fetch_assoc($reRetrieve);
 mysqli_close($db);
 
 function printurls($reArr) {
-   $urlsString = $reArr['websitesUrls'];
-   if($urlsString !== NULL) {
-       $urlsArray = explode("<#<#<#<>#>#>#>",$urlsString);
-       //echo "GETcsv<br>";
-       //print_r($urlsArray);
-       foreach ($urlsArray as $oneurl) {
-           if(!empty($oneurl)) {
-               echo "<input type='text' name='websites[]' value='$oneurl' onclick='openInNew(this);' /><br >";
-           }
+    $urlsString = $reArr['websitesUrls'];
+    if($urlsString !== NULL) {
+        $urlsArray = explode("<#<#<#<>#>#>#>",$urlsString);
+        //echo "GETcsv<br>";
+        //print_r($urlsArray);
+        foreach ($urlsArray as $oneurl) {
+            if(!empty($oneurl)) {
+                echo "<input type='text' name='websites[]' value='$oneurl' onclick='openInNew(this);' /><br >";
+            }
 
-       }
-   }
+        }
+    }
 }
-
-
 
 ?>
 
@@ -150,7 +145,20 @@ function printurls($reArr) {
 
 
                 <div>
-
+                    <?php  $db=connectDB();
+                    $query = "SELECT image1 FROM notes";
+                    $result = mysqli_query($db, $query);
+                    while($row = mysqli_fetch_array($result))
+                    {
+                        echo '  
+                          <tr>  
+                               <td>  
+                                    <img src="data:image/jpeg;base64,'.base64_encode($row['image1'] ).'" height="200" width="200" class="img-thumnail" />  
+                               </td>  
+                          </tr>  
+                     ';
+                    }
+                    ?>
 
                 </div>
 
