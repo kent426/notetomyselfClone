@@ -36,6 +36,11 @@ if(isset($_POST['submitting'])){
         insertImage();
     }
 
+    //check if the delete set
+    if(isset($_POST['delete'])){
+        deleteImage();
+    }
+
 }
 
 //function for inserting notes and TBD to DB
@@ -88,7 +93,8 @@ function insertImage(){
     $allowed =  array('gif' ,'jpg');
     $filename = $_FILES['i']['name'];
     $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    if(!in_array($ext,$allowed) ) {
+    $str = strtolower($ext);
+    if(!in_array($str,$allowed) ) {
         die("only can upload gif and jpg.<a href=\"notes.php\">Try again</a>");
     }
     //has 1 to 4 to upload
@@ -101,8 +107,15 @@ function insertImage(){
         $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
         mysqli_close($db);
     }
+}
 
-
+//delete IMAGE
+function deleteImage(){
+    $db=connectDB();
+    $email=$_SESSION['username'];
+    $qi = "UPDATE notes SET image1 = NULL,image2 = NULL,image3 = NULL,image4 = NULL WHERE email='$email';";
+    $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    mysqli_close($db);
 
 }
 
@@ -188,8 +201,6 @@ function printurls($reArr) {
                 ?>
 
 
-
-
                 <div>
                     <?php  $db=connectDB();
                     $email = $_SESSION['username'];
@@ -206,7 +217,7 @@ function printurls($reArr) {
                                <td>  
                                     <a href="data:image/jpeg;base64,'.base64_encode($oneIm).'" target="_blank"><img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" /></a>  
                                		
-                               		<input name="delete[]" type="checkbox">
+                               		<input name="delete[]" type="checkbox" value="img1">
 									
 									<label for="delete[]" >delete</label>
                                </td>  
