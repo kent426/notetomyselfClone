@@ -27,6 +27,21 @@ die(mysqli_connect_error());
 
 mysqli_select_db($db, DB_DATABASE);?>
 
+<?php
+
+
+if(isset($_POST['submitting'])){
+    $email=$_SESSION['username'];
+    $notes=$_POST['notes'];
+    $tb=$_POST['tbd'];
+    $qi = "INSERT INTO notes (email,notes,tbd) VALUES('$email', '$notes', '$tb')";
+
+    $userInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+
+}
+
+?>
+
 <div id="wrapper">
     <form action="notes.php" enctype="multipart/form-data" method="post">
         <?php echo '<h2 id="header">'.$_SESSION['username'].' - <span><a href="logout.php">Log out</a></span></h2>'?>

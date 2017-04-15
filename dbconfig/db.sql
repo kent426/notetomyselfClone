@@ -14,7 +14,6 @@ CREATE TABLE users (
 );
 
 CREATE TABLE notes (
-
 	notes_id INTEGER NOT NULL auto_increment,
 	email varchar(100),
 	websitesUrls VARCHAR(10000),
