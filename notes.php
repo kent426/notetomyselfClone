@@ -6,18 +6,12 @@
             window.open(textbox.value);
             this.blur();
         }
-
     </script>
-
-
     <link href="css/notes.css" rel="stylesheet" type="text/css" media="screen" />
-
-
-
 </head>
 <body>
-<?php
 
+<?php
 require_once "commonHead.php";
 
 session_start();
@@ -27,12 +21,12 @@ if($_SESSION['login'] != 1) {
 }
 
 $email = $_SESSION['username'];
-$db=connectDB();
+
+$db = connectDB();
 $retrieve = "SELECT * FROM notes WHERE email = '$email'";
 $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
 
 if(mysqli_num_rows($reRetrieve)==0) {
-
     //only the first time will be created
     $createRow = "INSERT INTO notes (notes_id,
 	email,
@@ -51,35 +45,33 @@ mysqli_close($db);
 
 <?php
 
-
 if(isset($_POST['submitting'])){
+    insertNotes();
+}
+
+//function for insert notes and TBD
+function insertNotes(){
     $db=connectDB();
     $email=$_SESSION['username'];
     $notes=$_POST['notes'];
     $tb=$_POST['tbd'];
     $qi = "UPDATE notes SET notes = '$notes',tbd = '$tb'  WHERE email='$email'";
-
-    $userInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
     mysqli_close($db);
-
-
-
 }
+
+
 
 ?>
 
 <?php
+//load and display notes and TBD
 $db=connectDB();
 $retrieve = "SELECT * FROM notes WHERE email = '$email'";
 $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
 
 $reArr = mysqli_fetch_assoc($reRetrieve);
-
-//$doc = new DOMDocument()
-
-
-
-print_r($reArr);
+mysqli_close($db);
 ?>
 
 <div id="wrapper">
