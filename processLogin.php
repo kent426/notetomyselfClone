@@ -49,7 +49,7 @@ if($numOfuser==1&&strcmp($row[0]['password'], $pass)==0&&$row[0]['isactive'] == 
 <br>Please confirm your registration by clicking the link in your email. 
 
 
-<br>Then you can <a href='index.php'>log in</a>. <span style='color:red;text-decoration:blink'>Alternatively, you can finish signing up <a href='http://note-to-myself.com/index.php?r=$confirmcode&e=$email'></span>now</a>.";
+<br>Then you can <a href='index.php'>log in</a>. <span style='color:red;text-decoration:blink'>Alternatively, you can finish signing up <a href='index.php?r=$confirmcode&e=$email'></span>now</a>.";
 } else{
     echo " Error logging in. Try <a href='index.php'>logging in</a> again or <a href='register2.php'>register</a> for a new account";
 }

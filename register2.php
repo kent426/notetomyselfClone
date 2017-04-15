@@ -61,7 +61,7 @@
             <p>
                 <!--<a id="signup" href="#"> -->
                 <input type="image" id="submit" src="button2.png" alt="register button" style="vertical-align:middle;" tabindex="5" />
-                <!--</a>-->or <a href="index-2.html">log in</a></p>
+                <!--</a>-->or <a href="index.php">log in</a></p>
             <!--<img src="clickhere.png" alt="click here" style="vertical-align:middle;" />-->
             </p>
         </li>

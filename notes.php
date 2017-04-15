@@ -6,7 +6,7 @@
             window.open(textbox.value);
             this.blur();
         }
-        
+
     </script>
 
 

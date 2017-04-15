@@ -14,11 +14,23 @@
 ob_start();
 session_start();
 
+
+
 if(!isset($_SESSION['login'])){
 die('<a href="index.php">log in</a> or <a href="register2.php">register</a>  before logging out.');
 }
-echo "<h2>".$_SESSION['username']."is now logged out. Thank you.</h2><p><a href='index.php'>Log in</a> again.</p>";
+echo "<h2>".$_SESSION['username']." is now logged out. Thank you.</h2><p><a href='index.php'>Log in</a> again.</p>";
 
+
+$_SESSION = array();
+
+if (ini_get("session.use_cookies")) {
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000,
+        $params["path"], $params["domain"],
+        $params["secure"], $params["httponly"]
+    );
+}
 
 
 session_destroy();

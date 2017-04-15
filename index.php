@@ -16,6 +16,7 @@ if(isset($_GET['r'])&&isset($_GET['e'])) {
     //confirm code matchs
     if (mysqli_num_rows($result) == 1&&strcmp(mysqli_fetch_row($result)[0], $confirmcode)==0) {
         $queryActivate = "UPDATE users SET isactive = 1 WHERE email = '$emailtoconfirm'";
+        mysqli_query($db,$queryActivate) or die(mysqli_error($db));
         $_SESSION['login'] = 1;
         $_SESSION['username'] = $email;
         echo "Thank you for confirming your registration for $email. You may now <a href='index.php'>log in</a>.";
