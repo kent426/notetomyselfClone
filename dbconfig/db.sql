@@ -13,3 +13,13 @@ CREATE TABLE users (
   CONSTRAINT isactRange CHECK (isactive IN (0,1))
 );
 
+CREATE TABLE notes (
+
+	notes_id INTEGER NOT NULL auto_increment,
+	email varchar(100),
+	notes 	TEXT,
+	tbd 	TEXT,
+
+	PRIMARY KEY (notes_id)
+);
+
