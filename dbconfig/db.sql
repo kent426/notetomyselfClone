@@ -15,7 +15,6 @@ CREATE TABLE users (
 
 CREATE TABLE notes (
 	notes_id INTEGER NOT NULL auto_increment,
-	user_id INTEGER NOT NULL,
 	email varchar(100) NOT NULL ,
 	websitesUrls VARCHAR(10000),
 	image1 MEDIUMBLOB,
@@ -24,8 +23,6 @@ CREATE TABLE notes (
 	image4 MEDIUMBLOB,
 	notes 	TEXT,
 	tbd 	TEXT,
-	PRIMARY KEY (notes_id),
-	FOREIGN KEY (user_id) REFERENCES users(user_id)
-
+	PRIMARY KEY (notes_id)
 );
 

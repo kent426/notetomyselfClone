@@ -27,15 +27,25 @@ if($_SESSION['login'] != 1) {
 }
 
 $email = $_SESSION['username'];
+$db=connectDB();
+$retrieve = "SELECT * FROM notes WHERE email = '$email'";
+$reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
 
-$db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) or
-die(mysqli_connect_error());
+if(mysqli_num_rows($reRetrieve)==0) {
 
-mysqli_select_db($db, DB_DATABASE);
-
-$retrieve = "SELECT * FROM notes WHERE email = $email";
-$reRetrieve = mysqli_query($db,$retrieve);
-
+    //only the first time will be created
+    $createRow = "INSERT INTO notes (notes_id,
+	email,
+	websitesUrls,
+	image1,
+	image2,
+	image3,
+	image4,
+	notes,
+	tbd) VALUES(DEFAULT,'$email',NULL,NULL,NULL,NULL,NULL,NULL,NULL)";
+    mysqli_query($db,$createRow) or die(mysqli_error($db));
+}
+mysqli_close($db);
 ?>
 
 
@@ -43,15 +53,33 @@ $reRetrieve = mysqli_query($db,$retrieve);
 
 
 if(isset($_POST['submitting'])){
+    $db=connectDB();
     $email=$_SESSION['username'];
     $notes=$_POST['notes'];
     $tb=$_POST['tbd'];
-    $qi = "INSERT INTO notes (email,notes,tbd) VALUES('$email', '$notes', '$tb')";
+    $qi = "UPDATE notes SET notes = '$notes',tbd = '$tb'  WHERE email='$email'";
 
     $userInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    mysqli_close($db);
+
+
 
 }
 
+?>
+
+<?php
+$db=connectDB();
+$retrieve = "SELECT * FROM notes WHERE email = '$email'";
+$reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
+
+$reArr = mysqli_fetch_assoc($reRetrieve);
+
+//$doc = new DOMDocument()
+
+
+
+print_r($reArr);
 ?>
 
 <div id="wrapper">
@@ -63,7 +91,7 @@ if(isset($_POST['submitting'])){
 
             <div id="column1">
                 <h2>notes</h2>
-                <textarea cols="16" rows="40" id="notes" name="notes" /></textarea>
+                <textarea cols="16" rows="40" id="notes" name="notes" /><?php echo $reArr['notes']; ?></textarea>
             </div>
 
             <div id="column2">
@@ -100,7 +128,7 @@ if(isset($_POST['submitting'])){
 
             <div id="column4">
                 <h2>tbd</h2>
-                <textarea cols="16" rows="40" id="tbd" name="tbd" /></textarea>
+                <textarea cols="16" rows="40" id="tbd" name="tbd" /><?php echo $reArr['tbd']; ?></textarea>
             </div>
 
         </div>
