@@ -22,10 +22,22 @@ require_once "commonHead.php";
 
 session_start();
 
+if($_SESSION['login'] != 1) {
+    die("</head><body>Please try again to <a href=\"register2.php\">register</a> or <a href=\"index.php\">log in</a>.</body></html>");
+}
+
+$email = $_SESSION['username'];
+
 $db = mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD) or
 die(mysqli_connect_error());
 
-mysqli_select_db($db, DB_DATABASE);?>
+mysqli_select_db($db, DB_DATABASE);
+
+$retrieve = "SELECT * FROM notes WHERE email = $email";
+$reRetrieve = mysqli_query($db,$retrieve);
+
+?>
+
 
 <?php
 
