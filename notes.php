@@ -1,16 +1,3 @@
-<html><head>
-    <title>Note-to-myself : notes</title>
-    <link rel="shortcut icon" href="pencil.ico" />
-    <script type="text/javascript">
-        function openInNew(textbox){
-            window.open(textbox.value);
-            this.blur();
-        }
-    </script>
-    <link href="css/notes.css" rel="stylesheet" type="text/css" media="screen" />
-</head>
-<body>
-
 <?php
 require_once "commonHead.php";
 
@@ -44,7 +31,6 @@ mysqli_close($db);
 
 
 <?php
-
 if(isset($_POST['submitting'])){
     insertNotes();
 }
@@ -59,9 +45,6 @@ function insertNotes(){
     $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
     mysqli_close($db);
 }
-
-
-
 ?>
 
 <?php
@@ -74,6 +57,19 @@ $reArr = mysqli_fetch_assoc($reRetrieve);
 mysqli_close($db);
 ?>
 
+
+<html><head>
+    <title>Note-to-myself : notes</title>
+    <link rel="shortcut icon" href="pencil.ico" />
+    <script type="text/javascript">
+        function openInNew(textbox){
+            window.open(textbox.value);
+            this.blur();
+        }
+    </script>
+    <link href="css/notes.css" rel="stylesheet" type="text/css" media="screen" />
+</head>
+<body>
 <div id="wrapper">
     <form action="notes.php" enctype="multipart/form-data" method="post">
         <?php echo '<h2 id="header">'.$_SESSION['username'].' - <span><a href="logout.php">Log out</a></span></h2>'?>
