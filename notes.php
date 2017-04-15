@@ -32,9 +32,9 @@ mysqli_close($db);
 <?php
 if(isset($_POST['submitting'])){
     insertNotes();
-    if(file_exists($_FILES['i']['tmp_name']) &&is_uploaded_file($_FILES['i']['tmp_name'])) {
+    if(file_exists($_FILES['i']['tmp_name']) && is_uploaded_file($_FILES['i']['tmp_name'])) {
         insertImage();
-}
+    }
 
 }
 
@@ -183,7 +183,7 @@ function printurls($reArr) {
                 if(checkImageNum()==5) {
                     echo "<p>maximum 4 images. delete some to upload new images.</p> ";
                 } else {
-                   echo "<input type=\"file\" name=\"i\" /><br /><br />";
+                    echo "<input type=\"file\" name=\"i\" /><br /><br />";
                 }
                 ?>
 
@@ -204,7 +204,11 @@ function printurls($reArr) {
                             echo '  
                           <tr>  
                                <td>  
-                                    <img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" />  
+                                    <a href="data:image/jpeg;base64,'.base64_encode($oneIm).'" target="_blank"><img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" /></a>  
+                               		
+                               		<input name="delete[]" type="checkbox">
+									
+									<label for="delete[]" >delete</label>
                                </td>  
                           </tr>  
                           <br>
