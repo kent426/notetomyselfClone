@@ -14,15 +14,7 @@ $reRetrieve = mysqli_query($db,$retrieve) or die(mysqli_error($db));
 
 if(mysqli_num_rows($reRetrieve)==0) {
     //only the first time will be created
-    $createRow = "INSERT INTO notes (notes_id,
-	email,
-	websitesUrls,
-	image1,
-	image2,
-	image3,
-	image4,
-	notes,
-	tbd) VALUES(DEFAULT,'$email',NULL,NULL,NULL,NULL,NULL,NULL,NULL)";
+    $createRow = "INSERT INTO notes  VALUES(DEFAULT,'$email',NULL,NULL,NULL,NULL,NULL,NULL,NULL,1,NULL,NULL,NULL,NULL)";
     mysqli_query($db,$createRow) or die(mysqli_error($db));
 }
 mysqli_close($db);
@@ -38,7 +30,8 @@ if(isset($_POST['submitting'])){
 
     //check if the delete set
     if(isset($_POST['delete'])){
-        deleteImage();
+        deleteImage($_POST['delete']);
+        //print_r($_POST['delete']);
     }
 
 }
@@ -102,19 +95,43 @@ function insertImage(){
     if($indexImag <5) {
         $db=connectDB();
         $name = "image" . $indexImag;
+        $nameInd = "imageindex". $indexImag;
         $file=addslashes(file_get_contents($_FILES["i"]["tmp_name"]));
         $qi = "UPDATE notes SET $name = '$file'  WHERE email='$email'";
-        $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+        //get current counter
+        $currindex = "SELECT imagecount FROM notes WHERE email='$email'";
+        $currIndexRes = mysqli_query($db,$currindex);
+        $curr = mysqli_fetch_row($currIndexRes)[0];
+
+        $newCurr = $curr +1 ;
+
+        //update counter, increment 1
+        $currindex = "UPDATE notes SET imagecount = $newCurr  WHERE email='$email'";
+        mysqli_query($db, $currindex) or die(mysqli_error($db));
+
+
+
+        //give new image a new index
+        $indeincre = "UPDATE notes SET $nameInd = $curr  WHERE email='$email'";
+        mysqli_query($db, $indeincre) or die(mysqli_error($db));
+
+
+        $imageInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
         mysqli_close($db);
     }
 }
 
 //delete IMAGE
-function deleteImage(){
+function deleteImage($deleteArr){
     $db=connectDB();
     $email=$_SESSION['username'];
-    $qi = "UPDATE notes SET image1 = NULL,image2 = NULL,image3 = NULL,image4 = NULL WHERE email='$email';";
-    $notesInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
+    $name = "image";
+    foreach ($deleteArr as $deleteIndex) {
+        $deleteName = $name . $deleteIndex;
+        //echo $deleteName;
+        $qi = "UPDATE notes SET $deleteName = NULL WHERE email='$email'";
+        $deleteIma = mysqli_query($db, $qi) or die(mysqli_error($db));
+    }
     mysqli_close($db);
 
 }
@@ -204,26 +221,44 @@ function printurls($reArr) {
                 <div>
                     <?php  $db=connectDB();
                     $email = $_SESSION['username'];
-                    $query = "SELECT image1,image2,image3,image4 FROM notes WHERE email = '$email'";
+
+                    $queryImageIndex = "SELECT imageindex1,imageindex2,imageindex3,imageindex4 FROM notes WHERE email = '$email'";
+                    $indexImageresult = mysqli_query($db, $queryImageIndex);
+                    $imageIndexarray = mysqli_fetch_assoc($indexImageresult);
+                    asort($imageIndexarray);
+                    //print_r($imageIndexarray);
+                    $sortedSelectOrder = "";
+                    foreach($imageIndexarray as $key => $value) {
+                        $keyname = str_replace("imageindex","image",$key).",";
+                        $sortedSelectOrder.=$keyname;
+                    }
+                    $sortedSelectOrder = substr($sortedSelectOrder,0,strlen($sortedSelectOrder)-1);
+
+
+                    $query = "SELECT $sortedSelectOrder FROM notes WHERE email = '$email'";
                     $result = mysqli_query($db, $query);
-                    while($row = mysqli_fetch_row($result))
+
+                    while($row = mysqli_fetch_assoc($result))
                     {
-                        foreach ($row as $oneIm) {
+                        foreach ($row as $key => $oneIm) {
+
                             if($oneIm===NULL) {
-                                break;
+                                continue;
                             }
+                            $indexForima = (int)(str_replace("image","",$key));
                             echo '  
                           <tr>  
                                <td>  
                                     <a href="data:image/jpeg;base64,'.base64_encode($oneIm).'" target="_blank"><img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" /></a>  
                                		
-                               		<input name="delete[]" type="checkbox" value="img1">
+                               		<input name="delete[]" type="checkbox" value="'.$indexForima.'">
 									
 									<label for="delete[]" >delete</label>
                                </td>  
                           </tr>  
                           <br>
                      ';
+                            mysqli_close($db);
                         }
 
 

@@ -23,6 +23,11 @@ CREATE TABLE notes (
 	image4 LONGBLOB,
 	notes 	TEXT,
 	tbd 	TEXT,
+	imagecount INTEGER NOT NULL,
+	imageindex1 INTEGER,
+	imageindex2 INTEGER,
+	imageindex3 INTEGER,
+	imageindex4 INTEGER,
 	PRIMARY KEY (notes_id)
 );
 
