@@ -7,6 +7,45 @@ if($_SESSION['login'] != 1) {
     die("</head><body>Please try again to <a href=\"register2.php\">register</a> or <a href=\"index.php\">log in</a>.</body></html>");
 }
 
+//check browser
+if(!isset($_SESSION['BROWSER'])){
+    if($_SESSION['BROWSER']!=$_SERVER['HTTP_USER_AGENT']){
+        echo "Browser error";
+        die('<a href="index.php">log in</a> first');
+    }
+
+    echo "Browser error";
+    die('<a href="index.php">log in</a> first');
+}
+//check IP
+if(!isset($_SESSION['IP'])){
+    if($_SESSION['IP']!=$_SERVER['HTTP_USER_AGENT']){
+        echo "IP error";
+        die('<a href="index.php">log in</a> first');
+    }
+
+    echo "IP error";
+    die('<a href="index.php">log in</a> first');
+}
+//check browser language
+if(!isset($_SESSION['LANGUAGE'])){
+    if($_SESSION['LANGUAGE']!=$_SERVER['HTTP_USER_AGENT']){
+        echo "Language error";
+        die('<a href="index.php">log in</a> first');
+    }
+
+    echo "Language error";
+    die('<a href="index.php">log in</a> first');
+}
+
+//check session id
+if (isset($_COOKIE['id'])) {
+    if ($_COOKIE['id'] != session_id()) {
+        echo "COOKIE error";
+        die('<a href="index.php">log in</a> first');
+    }
+}
+
 $email = $_SESSION['username'];
 $db = connectDB();
 $retrieve = "SELECT * FROM notes WHERE email = '$email'";
@@ -218,6 +257,8 @@ function printurls($reArr) {
                 ?>
 
 
+
+
                 <div>
                     <?php  $db=connectDB();
                     $email = $_SESSION['username'];
@@ -247,15 +288,13 @@ function printurls($reArr) {
                             }
                             $indexForima = (int)(str_replace("image","",$key));
                             echo '  
-                          <tr>  
-                               <td>  
+
                                     <a href="data:image/jpeg;base64,'.base64_encode($oneIm).'" target="_blank"><img src="data:image/jpeg;base64,'.base64_encode($oneIm).'" height="80" width="125" class="img-thumnail" /></a>  
                                		
                                		<input name="delete[]" type="checkbox" value="'.$indexForima.'">
 									
 									<label for="delete[]" >delete</label>
-                               </td>  
-                          </tr>  
+                          <br>
                           <br>
                      ';
                             mysqli_close($db);
