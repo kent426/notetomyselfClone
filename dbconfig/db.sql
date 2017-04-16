@@ -9,6 +9,7 @@ CREATE TABLE users (
 	password varchar(500) NOT NULL default '',
 	isactive  INTEGER NULL,
   confirmCode varchar(100) NOT NULL,
+	attackTime INTEGER NOT NULL,
 	PRIMARY KEY (user_id),
   CONSTRAINT isactRange CHECK (isactive IN (0,1))
 );

@@ -23,7 +23,7 @@ if ($passConf == $pass0) {
         //insert confirm code to database
     if (mysqli_num_rows($result) == 0) {
         $token = bin2hex(random_bytes(30));
-        $qi = "INSERT INTO users VALUES(DEFAULT ,'$reEmail', '$pass0',0,'$token')";
+        $qi = "INSERT INTO users VALUES(DEFAULT ,'$reEmail', '$pass0',0,'$token',0)";
         $userInsert = mysqli_query($db, $qi) or die(mysqli_error($db));
 
         //TODO send email
